@@ -1,11 +1,11 @@
 
-public class CaixaEletronico {
+public class Conta {
 	private String numero;
 	private String cpf;
 	private double saldo;
 	
 	// Construtor
-	public CaixaEletronico(String numero, String cpf) throws Exception {
+	public Conta(String numero, String cpf) throws Exception {
 		if(!numeroValido(numero)) {
 			throw new Exception("Insira um número no formato '12345'.");
 		}
@@ -15,6 +15,7 @@ public class CaixaEletronico {
 		
 		this.numero = numero;
 		this.cpf = cpf;
+		
 		// Toda conta será criada com saldo 0
 		this.saldo = 0;
 	}
@@ -48,6 +49,9 @@ public class CaixaEletronico {
 	
 	// Retira um determinado valor da conta
 	public void debitar(double valor) throws Exception {
+		if(this.saldo == 0) {
+			throw new Exception("Você não possui saldo para ser debitada. Faça um depósito antes!");
+		}
 		if(valor <= 0) {
 			throw new Exception("Insira um valor maior do que zero.");
 		}
@@ -72,7 +76,7 @@ public class CaixaEletronico {
 		}
 	}
 	
-	public void transferir(double valor, CaixaEletronico contaDestino) throws Exception {
+	public void transferir(double valor, Conta contaDestino) throws Exception {
 		// Lançará exceção se a conta que receberá a transferência for a mesma conta que está fazendo a transferência
 		if(this == contaDestino) {
 			throw new Exception("As contas origem e destino são as mesmas.");
@@ -110,8 +114,8 @@ public class CaixaEletronico {
 	}
 	
 	// Cria uma copia a partir de uma conta existente
-	public CaixaEletronico clonar() throws Exception {
-		CaixaEletronico novaConta = new CaixaEletronico(this.numero, this.cpf);
+	public Conta clonar() throws Exception {
+		Conta novaConta = new Conta(this.numero, this.cpf);
 		novaConta.creditar(this.saldo);
 		
 		return novaConta;
@@ -148,8 +152,10 @@ public class CaixaEletronico {
 
 	@Override
 	public String toString() {
-		return 	"Número da conta = " + numero +
-				"\nCPF = " + cpf +
+		return 	"Extrato do dia " + java.time.LocalDate.now() +
+				"\n------------------------ " +
+				"\nNúmero da conta = " + numero +
+				"\nCPF do titular = " + cpf +
 				"\nSaldo = R$ " + saldo;
 	}
 }
